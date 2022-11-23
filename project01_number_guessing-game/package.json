@@ -1,0 +1,19 @@
+{
+  "name": "guess-me",
+  "version": "1.0.0",
+  "description": "Simple guessing game ",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Guessing",
+    "game"
+  ],
+  "author": "Sohail Ishaque",
+  "license": "ISC",
+  "bin": {
+    "guessing-me": "lib/index.js"
+  }
+}
