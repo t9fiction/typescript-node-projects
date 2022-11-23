@@ -15,5 +15,11 @@
   "license": "ISC",
   "bin": {
     "guessing-me": "lib/index.js"
+  },
+  "dependencies": {
+    "@types/chalk-animation": "^1.6.1",
+    "@types/inquirer": "^9.0.3",
+    "chalk": "^5.1.2",
+    "nanospinner": "^1.1.0"
   }
 }
