@@ -1,7 +1,7 @@
 {
   "name": "calcsohail",
   "version": "1.2.0",
-  "description": "Develop a simple command line calculator using [TypeScipt](https://www.typescriptlang.org/), [Node.js](https://nodejs.org/en/) and [Inquirer](https://www.npmjs.com/package/inquirer).",
+  "description": "A simple calculator for education purpose",
   "main": "index.js",
   "type": "module",
   "scripts": {
