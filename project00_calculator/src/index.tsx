@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Start
 import inquirer from "inquirer";
 import chalk from "chalk";
@@ -85,45 +86,45 @@ async function app() {
         if (result.operation === "Addition") {
           answer = num1 + num2;
           log(
-            chalk.green(result.operation, " of the given numbers = "),
+            chalk.green(">",result.operation, " of the given numbers = "),
             answer
           );
           return answer;
         } else if (result.operation === "Multiplication") {
           answer = num1 * num2;
           log(
-            chalk.green(result.operation, " of the given numbers = "),
+            chalk.green(">",result.operation, " of the given numbers = "),
             answer
           );
           return answer;
         } else if (result.operation === "Subraction") {
           answer = num1 - num2;
           log(
-            chalk.green(result.operation, " of second number from first = "),
+            chalk.green(">",result.operation, " of second number from first = "),
             answer
           );
           return answer;
         } else if (result.operation === "Division") {
           answer = num1 / num2;
           log(
-            chalk.green(result.operation, " of first number by second = "),
+            chalk.green(">",result.operation, " of first number by second = "),
             answer
           );
           return answer;
         } else if (result.operation === "Modulus") {
           answer = num1 % num2;
           log(
-            chalk.green(result.operation, " of first number by second = "),
+            chalk.green(">",result.operation, " of first number by second = "),
             answer
           );
           return answer;
         } else if (result.operation === "Percentage") {
           answer = num1 / 100;
-          log(answer, chalk.green("%"));
+          log(chalk.green(">"),answer, chalk.green("%"));
           return answer;
         } else if (result.operation === "Sq root") {
           answer = num1 ** 0.5;
-          log(chalk.green(result.operation, " of given number = "), answer);
+          log(chalk.green(">",result.operation, " of given number = "), answer);
           return answer;
         } else {
           return 0;
@@ -151,5 +152,7 @@ async function app() {
     await operation();
     await reRun();
   }
+
+  console.clear();
 }
 app();

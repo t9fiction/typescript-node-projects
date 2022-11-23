@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -84,37 +85,37 @@ function app() {
                         });
                     if (result.operation === "Addition") {
                         answer = num1 + num2;
-                        log(chalk.green(result.operation, " of the given numbers = "), answer);
+                        log(chalk.green(">", result.operation, " of the given numbers = "), answer);
                         return answer;
                     }
                     else if (result.operation === "Multiplication") {
                         answer = num1 * num2;
-                        log(chalk.green(result.operation, " of the given numbers = "), answer);
+                        log(chalk.green(">", result.operation, " of the given numbers = "), answer);
                         return answer;
                     }
                     else if (result.operation === "Subraction") {
                         answer = num1 - num2;
-                        log(chalk.green(result.operation, " of second number from first = "), answer);
+                        log(chalk.green(">", result.operation, " of second number from first = "), answer);
                         return answer;
                     }
                     else if (result.operation === "Division") {
                         answer = num1 / num2;
-                        log(chalk.green(result.operation, " of first number by second = "), answer);
+                        log(chalk.green(">", result.operation, " of first number by second = "), answer);
                         return answer;
                     }
                     else if (result.operation === "Modulus") {
                         answer = num1 % num2;
-                        log(chalk.green(result.operation, " of first number by second = "), answer);
+                        log(chalk.green(">", result.operation, " of first number by second = "), answer);
                         return answer;
                     }
                     else if (result.operation === "Percentage") {
                         answer = num1 / 100;
-                        log(answer, chalk.green("%"));
+                        log(chalk.green(">"), answer, chalk.green("%"));
                         return answer;
                     }
                     else if (result.operation === "Sq root") {
                         answer = num1 ** 0.5;
-                        log(chalk.green(result.operation, " of given number = "), answer);
+                        log(chalk.green(">", result.operation, " of given number = "), answer);
                         return answer;
                     }
                     else {
@@ -145,6 +146,7 @@ function app() {
             yield operation();
             yield reRun();
         }
+        console.clear();
     });
 }
 app();
