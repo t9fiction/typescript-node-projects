@@ -2,15 +2,21 @@
 // Start
 import inquirer from "inquirer";
 import chalk from "chalk";
+import chalkAnimation from "chalk-animation";
+import { createSpinner } from "nanospinner";
 
 // const prompt = inquirer.createPromptModule();
 const log = console.log;
 
+const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
+
 async function app() {
   console.clear();
   console.log("\n");
-  log(chalk.bgBlue("Calculator by Sohail Ishaque : PIAIC105167"));
+  // log(chalkAnimation.radar("Calculator by Sohail Ishaque : PIAIC105167"));
+  log(chalk.bgGreen("Calculator by Sohail Ishaque : PIAIC105167"));
   console.log("\n");
+
   //Asking for user Name
   let user = await inquirer
     .prompt([
@@ -83,48 +89,48 @@ async function app() {
               num2 = result.secondNumber;
             });
 
+        const spinner = createSpinner("Checking answer...\n").start();
+        await sleep();
+
         if (result.operation === "Addition") {
           answer = num1 + num2;
-          log(
-            chalk.green(">",result.operation, " of the given numbers = "),
-            answer
-          );
+          spinner.success({
+            text: chalk.green(`> ${result.operation} of the given numbers = `)+` ${answer}`,
+          });
           return answer;
         } else if (result.operation === "Multiplication") {
           answer = num1 * num2;
-          log(
-            chalk.green(">",result.operation, " of the given numbers = "),
-            answer
-          );
+          spinner.success({
+            text: chalk.green(`> ${result.operation} of the given numbers =`)+` ${answer}`,
+          });
           return answer;
         } else if (result.operation === "Subraction") {
           answer = num1 - num2;
-          log(
-            chalk.green(">",result.operation, " of second number from first = "),
-            answer
-          );
+          spinner.success({
+            text: chalk.green(`> ${result.operation} of second number from first =`)+` ${answer}`,
+          });
           return answer;
         } else if (result.operation === "Division") {
           answer = num1 / num2;
-          log(
-            chalk.green(">",result.operation, " of first number by second = "),
-            answer
-          );
+          spinner.success({
+            text: chalk.green(`> ${result.operation} of first number by second =`)+` ${answer}`,
+          });
           return answer;
         } else if (result.operation === "Modulus") {
           answer = num1 % num2;
-          log(
-            chalk.green(">",result.operation, " of first number by second = "),
-            answer
-          );
+          spinner.success({
+            text: chalk.green(`> ${result.operation} of first number by second =`)+` ${answer}`,
+          });
           return answer;
         } else if (result.operation === "Percentage") {
           answer = num1 / 100;
-          log(chalk.green(">"),answer, chalk.green("%"));
+          spinner.success({ text: chalk.green(`>`)+` ${answer} %`});
           return answer;
         } else if (result.operation === "Sq root") {
           answer = num1 ** 0.5;
-          log(chalk.green(">",result.operation, " of given number = "), answer);
+          spinner.success({
+            text: chalk.green(`> ${result.operation} of the given number =`)+` ${answer}`,
+          });
           return answer;
         } else {
           return 0;
