@@ -6,7 +6,7 @@ import chalkAnimation from "chalk-animation";
 
 let magicNum = Math.floor(Math.random() * 10) + 1;
 
-let num1 = 0;
+let num1:number = 0;
 const log = console.log;
 
 const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
@@ -85,7 +85,7 @@ async function ifChecking() {
   const spinner = createSpinner("Checking answer...\n").start();
   await sleep();
 
-  if (num1 >= 0 && num1 < 10) {
+  if (num1 >= 0 && num1 <= 10) {
     if (num1 == magicNum) {
       spinner.success({
         text: chalk.blue(`Hurrah, You have guessed the number`),

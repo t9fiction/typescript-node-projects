@@ -1,6 +1,6 @@
 {
   "name": "guess-me",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple guessing game ",
   "main": "index.js",
   "type": "module",

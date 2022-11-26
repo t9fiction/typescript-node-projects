@@ -86,7 +86,7 @@ function ifChecking() {
     return __awaiter(this, void 0, void 0, function* () {
         const spinner = createSpinner("Checking answer...\n").start();
         yield sleep();
-        if (num1 >= 0 && num1 < 10) {
+        if (num1 >= 0 && num1 <= 10) {
             if (num1 == magicNum) {
                 spinner.success({
                     text: chalk.blue(`Hurrah, You have guessed the number`),
