@@ -1,0 +1,27 @@
+{
+  "name": "guess-me",
+  "version": "1.0.1",
+  "description": "Simple guessing game ",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Guessing",
+    "game"
+  ],
+  "author": "Sohail Ishaque",
+  "license": "ISC",
+  "bin": {
+    "guessing-me": "lib/index.js"
+  },
+  "dependencies": {
+    "@types/chalk-animation": "^1.6.1",
+    "@types/inquirer": "^9.0.3",
+    "chalk": "^5.1.2",
+    "chalk-animation": "^2.0.3",
+    "inquirer": "^9.1.4",
+    "nanospinner": "^1.1.0"
+  }
+}

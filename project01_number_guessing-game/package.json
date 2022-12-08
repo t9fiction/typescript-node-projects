@@ -1,21 +1,18 @@
 {
-  "name": "guess-me",
-  "version": "1.0.1",
-  "description": "Simple guessing game ",
+  "name": "atm-bank",
+  "version": "1.0.0",
+  "description": "Simple Banking ATM ",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "Guessing",
-    "game"
+    "atm",
+    "bank"
   ],
   "author": "Sohail Ishaque",
   "license": "ISC",
-  "bin": {
-    "guessing-me": "lib/index.js"
-  },
   "dependencies": {
     "@types/chalk-animation": "^1.6.1",
     "@types/inquirer": "^9.0.3",
