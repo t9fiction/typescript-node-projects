@@ -1,5 +1,6 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
+import chalkAnimation from "chalk-animation";
 import { createSpinner } from "nanospinner";
 import { Student } from "./classes/student.js";
 import { Instructor } from "./classes/instructor.js";
@@ -33,7 +34,40 @@ const teachers_logins = [
     },
 ];
 //___________________________________________________________________________
-//Creating a new user
+// ---- Rainbow Effect ----
+async function welcome() {
+    console.clear();
+    console.log("\n");
+    let rainbow = chalkAnimation.rainbow(`\t\t******************************\n
+     \t\t*     UNIVERSITY  PORTAL     *\n 
+     \t\t*       Sohail Ishaque       *\n
+     \t\t*         PIAIC105167        *\n
+     \t\t******************************\n`);
+    rainbow.start(); // Animation resumes
+    await sleep();
+    console.log("\n");
+}
+//___________________________________________________________________________
+//Sub user
+const anotherAction = async () => {
+    console.log("\n");
+    await inquirer
+        .prompt({
+        type: "list",
+        name: "anotheraction",
+        message: "Do you perform another Action ?",
+        choices: ["Yes", "No"],
+    })
+        .then(async (result) => {
+        if (result.anotheraction === "Yes") {
+        }
+        else {
+            // break;
+        }
+    });
+};
+//___________________________________________________________________________
+//Sub user
 const subCreation = async () => {
     const tx = await inquirer.prompt([
         {
@@ -67,41 +101,14 @@ const subCreation = async () => {
         {
             name: "status",
             type: "list",
-            choices: ["Active", "Inactive", "Blocked"],
+            choices: ["Active", "Inactive"],
             message: chalk.green("Set the status"),
         },
     ]);
     return { tx };
 };
 //___________________________________________________________________________
-//Login function
-const login = async () => {
-    const tx = await inquirer.prompt([
-        {
-            name: "userName",
-            type: "input",
-            message: chalk.green("Enter User name"),
-        },
-        {
-            name: "password",
-            type: "input",
-            message: chalk.green("Enter Password"),
-        },
-    ]);
-    if (admin_branch.find((obj) => obj.userName === tx.userName && obj.password === tx.password)) {
-        isLoggedIn = true;
-        spinner.success({
-            text: chalk.green(`> Logged in Successfully`),
-        });
-    }
-    else {
-        spinner.error({
-            text: chalk.green("> Incorrect username or password"),
-        });
-    }
-};
-//___________________________________________________________________________
-//Sub Login function
+//Creating a new user
 const createLogin = async () => {
     await inquirer
         .prompt({
@@ -112,14 +119,16 @@ const createLogin = async () => {
     })
         .then(async (result) => {
         const { tx } = await subCreation();
-        console.log(result);
         if (result.loginfor === "student") {
             students_logins.push({
                 userName: tx.id,
                 password: tx.password,
                 status: tx.status,
             });
-            console.log(students_logins);
+            spinner.success({
+                text: chalk.green(`> New Student login has been created`),
+            });
+            await anotherAction();
         }
         else if (result.loginfor === "teacher") {
             teachers_logins.push({
@@ -127,7 +136,10 @@ const createLogin = async () => {
                 password: tx.password,
                 status: tx.status,
             });
-            console.log(teachers_logins);
+            spinner.success({
+                text: chalk.green(`> New Teacher login has been created`),
+            });
+            await anotherAction();
         }
         else {
             admin_branch.push({
@@ -135,7 +147,82 @@ const createLogin = async () => {
                 password: tx.password,
                 status: tx.status,
             });
-            console.log(admin_branch);
+            spinner.success({
+                text: chalk.green(`> New Admin has been created`),
+            });
+            await anotherAction();
+        }
+        operation();
+    });
+};
+//___________________________________________________________________________
+//Sub Login function
+const subLogin = async () => {
+    const tx = await inquirer.prompt([
+        {
+            name: "userName",
+            type: "input",
+            message: chalk.green("Enter User name"),
+            validate: (id) => {
+                if (id === "") {
+                    return "Not a valid ID";
+                }
+                return true;
+            },
+        },
+        {
+            name: "password",
+            type: "password",
+            mask: true,
+            message: chalk.green("Enter Password"),
+            validate: (pass) => {
+                if (pass === "") {
+                    return "Password cannot be empty";
+                }
+                return true;
+            },
+        },
+    ]);
+    return { tx };
+};
+//___________________________________________________________________________
+//Login function
+const login = async () => {
+    await inquirer
+        .prompt({
+        type: "list",
+        name: "loginfor",
+        message: chalk.greenBright("Login as a  ?"),
+        choices: ["student", "teacher", "admin"],
+    })
+        .then(async (result) => {
+        const { tx } = await subLogin();
+        if (result.loginfor === "student") {
+            students_logins.find((obj) => obj.userName === tx.userName && obj.password === tx.password)
+                ? spinner.success({
+                    text: chalk.green(`> Logged in Successfully`),
+                })
+                : spinner.error({
+                    text: chalk.green("> Incorrect username or password"),
+                });
+        }
+        else if (result.loginfor === "teacher") {
+            teachers_logins.find((obj) => obj.userName === tx.userName && obj.password === tx.password)
+                ? spinner.success({
+                    text: chalk.green(`> Logged in Successfully`),
+                })
+                : spinner.error({
+                    text: chalk.green("> Incorrect username or password"),
+                });
+        }
+        else {
+            admin_branch.find((obj) => obj.userName === tx.userName && obj.password === tx.password)
+                ? spinner.success({
+                    text: chalk.green(`> Logged in Successfully`),
+                })
+                : spinner.error({
+                    text: chalk.green("> Incorrect username or password"),
+                });
         }
     });
 };
@@ -146,7 +233,7 @@ async function operation() {
         .prompt({
         type: "list",
         name: "operation",
-        message: chalk.greenBright("Login or Register(only for Admins)"),
+        message: chalk.greenBright("Register(only for Admins) or Login"),
         choices: ["Login", "Register"],
     })
         .then(async (result) => {
@@ -154,15 +241,11 @@ async function operation() {
         spinner.start();
         await sleep();
         if (result.operation === "Login") {
-            spinner.success({
-                text: chalk.green(`> ${result.role} of the given numbers = `) +
-                    ` ${answer}`,
-            });
+            spinner.stop();
+            await login();
         }
         else {
-            spinner.success({
-                text: chalk.green(`> Welcome to Administration Portal`),
-            });
+            spinner.stop();
             await createLogin();
         }
     });
@@ -170,12 +253,8 @@ async function operation() {
 //___________________________________________________________________________
 // Main function
 async function app() {
-    console.clear();
-    console.log("\n");
-    // log(chalkAnimation.radar("Calculator by Sohail Ishaque : PIAIC105167"));
-    console.log(chalk.bgGreen("University Portal by Sohail Ishaque : PIAIC105167"));
-    console.log("\n");
-    operation();
+    await welcome();
+    await operation();
 }
 //___________________________________________________________________________
 const bcc = new Course("BCC", "Blockchain");
