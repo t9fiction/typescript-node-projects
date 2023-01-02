@@ -2,7 +2,8 @@ import { Course } from "./courses.js";
 import { Person } from "./person.js";
 
 export class Instructor extends Person {
-  private salary: number;
+  salary: number;
+  // private salary: number;
   courses: string[] = [];
 
   constructor(name:string, age:number,salary:number) {

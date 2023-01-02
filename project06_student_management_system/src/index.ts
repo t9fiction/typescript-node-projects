@@ -10,9 +10,37 @@ import { Department } from "./classes/department.js";
 
 //___________________________________________________________________________
 
-const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms = 500) => new Promise((r) => setTimeout(r, ms));
 let isLoggedIn = false;
 const spinner = createSpinner("Checking answer...\n");
+// let currentUser: any = "";
+
+//___________________________________________________________________________
+const bcc = new Course("BCC", "Blockchain");
+const mtv = new Course("MTV", "Metaverse");
+
+const instructor1 = new Instructor("Sir Zia", 50, 800000);
+const instructor2 = new Instructor("Sir Imran", 30, 500000);
+
+const student1 = new Student("Sohail", 39);
+const student2 = new Student("Nawaz", 36);
+
+const IT_dept = new Department("IT");
+
+instructor1.assignCourse(bcc);
+instructor1.assignCourse(mtv);
+instructor2.assignCourse(bcc);
+
+bcc.addStudent(student1);
+bcc.addStudent(student2);
+bcc.setInstructor(instructor1);
+
+student1.registerForCourse(bcc);
+student1.registerForCourse(mtv);
+student2.registerForCourse(mtv);
+
+IT_dept.addCourse(bcc);
+
 //___________________________________________________________________________
 //login credentials / Database
 const admin_branch = [
@@ -22,6 +50,8 @@ const admin_branch = [
     status: "Active",
   },
 ];
+const student = new Student('student1', 24)
+const student_dashboard:any = [student]
 const students_logins = [
   {
     userName: "student",
@@ -29,10 +59,12 @@ const students_logins = [
     status: "Active",
   },
 ];
+const instruct1 = new Instructor("instructor1", 50, 1000000);
+const teachers_dashboard: any = [instruct1];
 const teachers_logins = [
   {
-    userName: "teacher",
-    password: "teacher",
+    userName: "instructor1",
+    password: "instructor1",
     status: "Active",
   },
 ];
@@ -59,7 +91,7 @@ async function welcome() {
 //___________________________________________________________________________
 //Sub user
 const anotherAction = async () => {
-  console.log("\n")
+  console.log("\n");
   await inquirer
     .prompt({
       type: "list",
@@ -70,6 +102,7 @@ const anotherAction = async () => {
     .then(async (result) => {
       if (result.anotheraction === "Yes") {
       } else {
+        console.log("------------------ Thanks ------------------");
         // break;
       }
     });
@@ -124,7 +157,7 @@ const createLogin = async () => {
     .prompt({
       type: "list",
       name: "loginfor",
-      message: chalk.greenBright("Register "),
+      message: chalk.greenBright("Registration of "),
       choices: ["student", "teacher", "admin"],
     })
     .then(async (result) => {
@@ -145,6 +178,37 @@ const createLogin = async () => {
           password: tx.password,
           status: tx.status,
         });
+
+        const txsub = await inquirer.prompt([
+          {
+            name: "salary",
+            type: "input",
+            message: chalk.green("Enter Salary of the new instructor"),
+            validate: (id) => {
+              if (isNaN(id)) {
+                return "Salary not valid";
+              }
+              return true;
+            },
+          },
+          {
+            name: "age",
+            type: "input",
+            message: chalk.green("Enter Age of the instructor"),
+            validate: (pass) => {
+              if (isNaN(pass)) {
+                return "Wrong age";
+              }
+              return true;
+            },
+          },
+        ]);
+        // Creating the class of the instructor
+        const instruct1 = new Instructor(tx.id, txsub.age, txsub.salary);
+        // console.log(instruct1)
+        teachers_dashboard.push(instruct1);
+        // const instructor = new Instructor(tx.id, txsub.age, txsub.salary);
+        // console.log(teachers_dashboard);
         spinner.success({
           text: chalk.green(`> New Teacher login has been created`),
         });
@@ -208,39 +272,101 @@ const login = async () => {
     })
     .then(async (result) => {
       const { tx } = await subLogin();
+      spinner.start();
+      await sleep();
       if (result.loginfor === "student") {
-        students_logins.find(
-          (obj) => obj.userName === tx.userName && obj.password === tx.password
-        )
-          ? spinner.success({
-              text: chalk.green(`> Logged in Successfully`),
-            })
-          : spinner.error({
-              text: chalk.green("> Incorrect username or password"),
-            });
+        if (
+          students_logins.find(
+            (obj) =>
+            obj.userName === tx.userName && obj.password === tx.password
+            )
+            ) {
+          spinner.success({
+            text: chalk.green(`> Logged in Successfully`),
+          });
+          // currentUser = tx;
+        } else {
+          spinner.error({
+            text: chalk.green("> Incorrect username or password"),
+          });
+        }
       } else if (result.loginfor === "teacher") {
-        teachers_logins.find(
-          (obj) => obj.userName === tx.userName && obj.password === tx.password
-        )
-          ? spinner.success({
-              text: chalk.green(`> Logged in Successfully`),
-            })
-          : spinner.error({
-              text: chalk.green("> Incorrect username or password"),
-            });
+        if (
+          teachers_logins.find(
+            (obj) =>
+              obj.userName === tx.userName && obj.password === tx.password
+          )
+        ) {
+          spinner.success({
+            text: chalk.green(`> Logged in Successfully`),
+          });
+          // currentUser = tx;
+          await instructorPortal(tx);
+        } else {
+          spinner.error({
+            text: chalk.green("> Incorrect username or password"),
+          });
+        }
       } else {
-        admin_branch.find(
-          (obj) => obj.userName === tx.userName && obj.password === tx.password
-        )
-          ? spinner.success({
-              text: chalk.green(`> Logged in Successfully`),
-            })
-          : spinner.error({
-              text: chalk.green("> Incorrect username or password"),
-            });
+        if (
+          admin_branch.find(
+            (obj) =>
+              obj.userName === tx.userName && obj.password === tx.password
+          )
+        ) {
+          spinner.success({
+            text: chalk.green(`> Logged in Successfully`),
+          });
+        } else {
+          spinner.error({
+            text: chalk.green("> Incorrect username or password"),
+          });
+        }
       }
     });
 };
+
+//___________________________________________________________________________
+//Dashboard
+const courseInstructor = async () => {
+  console.log("\n");
+  const txsub = await inquirer.prompt([
+    {
+      name: "course",
+      type: "list",
+      message: chalk.green("Instructor's Portal"),
+      choices: ["View your Subjects", "View Salary", "Add another Subject", "Exit"],
+    },
+  ]);
+
+  return { txsub };
+};
+
+//___________________________________________________________________________
+//Instructor Portal
+const instructorPortal = async (tx: any) => {
+  const { txsub } = await courseInstructor();
+  let currentTeacher: Instructor;
+  currentTeacher = teachers_dashboard.find((obj: any) => {
+    tx.userName == obj.name;
+    return obj;
+  });
+  // console.log(currentUser);
+  async function dashbaord(){
+
+    if (txsub.course === "View your Subjects") {
+      console.log(currentTeacher.courses);
+    } else if (txsub.course === "View Salary") {
+      console.log(currentTeacher.salary);
+    } else if (txsub.course === "Add another Subject"){
+      // currentUser.assignCourse(bcc);
+    }else{
+      //exit
+    }
+  }
+  await dashbaord();
+};
+
 
 //___________________________________________________________________________
 // Operation Function
@@ -249,18 +375,20 @@ async function operation() {
     .prompt({
       type: "list",
       name: "operation",
-      message: chalk.greenBright("Register(only for Admins) or Login"),
-      choices: ["Login", "Register"],
+      message: chalk.greenBright(
+        " Login or Registration(only Admins are allowed to do Registration)"
+      ),
+      choices: ["Login", "Registration"],
     })
     .then(async (result) => {
       let answer = 0;
       spinner.start();
       await sleep();
       if (result.operation === "Login") {
-        spinner.stop()
+        spinner.stop();
         await login();
       } else {
-        spinner.stop()
+        spinner.stop();
         await createLogin();
       }
     });
@@ -269,35 +397,12 @@ async function operation() {
 //___________________________________________________________________________
 // Main function
 async function app() {
+  // await instructorPortal();
   await welcome();
-  await operation();
+  await login();
 }
 
 //___________________________________________________________________________
-const bcc = new Course("BCC", "Blockchain");
-const mtv = new Course("MTV", "Metaverse");
-
-const instructor1 = new Instructor("Sir Zia", 50, 800000);
-const instructor2 = new Instructor("Sir Imran", 30, 500000);
-
-const student1 = new Student("Sohail", 39);
-const student2 = new Student("Nawaz", 36);
-
-const IT_dept = new Department("IT");
-
-instructor1.assignCourse(bcc);
-instructor1.assignCourse(mtv);
-instructor2.assignCourse(bcc);
-
-bcc.addStudent(student1);
-bcc.addStudent(student2);
-bcc.setInstructor(instructor1);
-
-student1.registerForCourse(bcc);
-student1.registerForCourse(mtv);
-student2.registerForCourse(mtv);
-
-IT_dept.addCourse(bcc);
 
 // console.log(
 //   "----------------------------------------------------------------------"
@@ -310,7 +415,7 @@ IT_dept.addCourse(bcc);
 // console.log(
 //   "----------------------------------------------------------------------"
 // );
-// console.log(instructor1);
+console.log(instructor1);
 // console.log(
 //   "----------------------------------------------------------------------"
 // );
